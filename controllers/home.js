@@ -20,3 +20,7 @@ exports.stats = (req, res) => {
     title: 'stats'
   });
 };
+
+exports.stats = (req, res) => {
+  res.send('stayin alive');
+};
