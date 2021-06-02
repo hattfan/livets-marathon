@@ -21,6 +21,6 @@ exports.stats = (req, res) => {
   });
 };
 
-exports.stats = (req, res) => {
+exports.alive = (req, res) => {
   res.send('stayin alive');
 };

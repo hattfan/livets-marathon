@@ -130,6 +130,7 @@ app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawes
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/alive', homeController.alive);
 app.get('/registermatch', registerMatchController.index);
 app.post('/registermatch', registerMatchController.postMatch);
 app.get('/registergame', registerGameController.index);
