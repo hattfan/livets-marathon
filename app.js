@@ -16,7 +16,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const expressStatusMonitor = require('express-status-monitor');
-const sass = require('node-sass-middleware');
+const sass = require('sass');
 const multer = require('multer');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
@@ -47,6 +47,27 @@ const passportConfig = require('./config/passport');
  */
 const app = express();
 
+const fs = require('fs');
+
+const srcPath = path.join(__dirname, 'public', 'css'); // Adjust as needed
+const destPath = path.join(__dirname, 'public', 'css');
+
+// Compile Sass file(s)
+function compileSass() {
+  const result = sass.renderSync({
+    file: path.join(srcPath, 'main.scss'), // Entry Sass file
+    outFile: path.join(destPath, 'main.css')
+  });
+
+  fs.writeFileSync(path.join(destPath, 'main.css'), result.css);
+}
+
+compileSass(); // Compile Sass initially
+
+// Set up Express to serve the compiled CSS
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 /**
  * Connect to MongoDB.
  */
@@ -70,10 +91,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(expressStatusMonitor());
 app.use(compression());
-app.use(sass({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public')
-}));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
